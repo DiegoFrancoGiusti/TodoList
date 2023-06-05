@@ -10,8 +10,13 @@ input[type=text]:focus {
   max-width: 400px;
 }
 
+.todos-container{
+  max-height: 320px;
+}
+
 .todos-container li {
-  background: #484E53;
+  background: #c6c7c8;
+  color: #484E53;
 }
 
 .delete {
@@ -20,4 +25,24 @@ input[type=text]:focus {
 
 .hidden{
   display: none;
+}
+
+.scrolling{
+  overflow: scroll;
+}
+
+
+.scrolling::-webkit-scrollbar{
+  width: 12px;
+  height: 0px;
+}
+
+.scrolling::-webkit-scrollbar-track{
+  background-color: transparent;
+}
+
+.scrolling::-webkit-scrollbar-thumb{
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0,0.4);
+  border:2px solid #c6c7c8;
 }
