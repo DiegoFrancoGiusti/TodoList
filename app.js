@@ -1,68 +1,45 @@
-const formAddTodo = document.querySelector('.form-add-todo')
-const todosContainer = document.querySelector('.todos-container')
-const formSearch = document.querySelector('.form-search')
+const addTodoForm = document.querySelector('.form-add-todo')
+const searchTodoForm = document.querySelector('.form-search')
+const todoContainer = document.querySelector('.todos-container')
 
-let liGroupItem = document.querySelectorAll('li.list-group-item')
-let deleteIcons = document.querySelectorAll('.delete')
-
-const updateNodeLists = () => {
-  liGroupItem = document.querySelectorAll('li.list-group-item')
-  deleteIcons = document.querySelectorAll('.delete')
-}
-
-const addTodo = event => {
+addTodoForm.addEventListener('submit',event => {
   event.preventDefault()
 
   const inputValue = event.target.add.value.trim()
 
   if(inputValue.length < 3 || inputValue === ''){
-    alert('Por vavor, insira um texto valido!')
+    alert('Por favor, insira um texto válido!')
     return
   }
 
-  todosContainer.innerHTML += `
+  todoContainer.innerHTML += `
     <li class="list-group-item d-flex justify-content-between align-items-center">
-      <span>${inputValue}</span>
-      <i class="far fa-trash-alt delete" data-todo-index="${liGroupItem.length}"></i>
+    <span>${inputValue}</span>
+    <i class="far fa-trash-alt delete"></i>
     </li>
   `
 
-  updateNodeLists()
-  formAddTodo.reset()
-}
+  event.target.reset()
+})
 
-const setElementsAttribute = (element,attribute) => {
-  element.forEach((_,index) => {
-    deleteIcons[index].setAttribute(attribute, `${index}`)
-  })
-}
-
-const deleteTodo = event => {
+todoContainer.addEventListener('click', event => {
   const clickedElement = event.target
-  const getDeleteIcon = Array.from(clickedElement.classList).includes('delete')
+  const TrashWasClicked = Array.from(clickedElement.classList).includes('delete')
 
-  if(getDeleteIcon){
-    const indexTodo = clickedElement.dataset.todoIndex
-
-    liGroupItem[indexTodo].remove()
-
-    updateNodeLists()
-    setElementsAttribute(liGroupItem,'data-todo-index')
+  if(TrashWasClicked){
+    clickedElement.parentElement.remove()
   }
-}
 
-const searchTodo = event => {
-  const inputValue = event.target.value.trim().toLowerCase()
-  const todos = Array.from(todosContainer.children)
+})
+
+searchTodoForm.addEventListener('input', event => {
+  const inputValue = event.target.value.toLowerCase().trim()
+  const todos = Array.from(todoContainer.children)
 
   todos.forEach(todo => {
-    let shouldBeVisible = todo.textContent.toLowerCase().trim().includes(inputValue)
-
+    const shouldBeVisible = todo.textContent.toLocaleLowerCase().trim().includes(inputValue)
+    
     todo.classList.add(shouldBeVisible ? 'd-flex' : 'd-none')
-    todo.classList.remove(shouldBeVisible ? 'd-none' : 'd-flex')
+    todo.classList.remove(shouldBeVisible? 'd-none' : 'd-flex')
   })
-}
-
-formAddTodo.addEventListener('submit', addTodo)
-todosContainer.addEventListener('click', deleteTodo)
-formSearch.addEventListener('input',searchTodo)
+})
