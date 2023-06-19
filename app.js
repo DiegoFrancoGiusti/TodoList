@@ -2,7 +2,19 @@ const addTodoForm = document.querySelector('.form-add-todo')
 const searchTodoForm = document.querySelector('.form-search')
 const todoContainer = document.querySelector('.todos-container')
 
-addTodoForm.addEventListener('submit',event => {
+let todosLi = document.querySelectorAll('.list-group-item')
+let trashIcons = document.querySelectorAll('i.delete')
+
+const updateNodeList = () => {
+  todosLi = document.querySelectorAll('.list-group-item')
+  trashIcons = document.querySelectorAll('.list-group-item i.delete')
+}
+
+const updateDataAttribute = () => {
+  todosLi.forEach((_,index) => trashIcons[index].setAttribute('data-todo-index', index))
+}
+
+const addTodo = event => {
   event.preventDefault()
 
   const inputValue = event.target.add.value.trim()
@@ -15,24 +27,29 @@ addTodoForm.addEventListener('submit',event => {
   todoContainer.innerHTML += `
     <li class="list-group-item d-flex justify-content-between align-items-center">
     <span>${inputValue}</span>
-    <i class="far fa-trash-alt delete"></i>
+    <i class="far fa-trash-alt delete" data-todo-index = "${todosLi.length}"></i>
     </li>
   `
 
+  updateNodeList()
   event.target.reset()
-})
+}
 
-todoContainer.addEventListener('click', event => {
+const deleteTodo = event => {
   const clickedElement = event.target
   const TrashWasClicked = Array.from(clickedElement.classList).includes('delete')
 
   if(TrashWasClicked){
-    clickedElement.parentElement.remove()
+    const indexTodo = clickedElement.dataset.todoIndex
+    
+    todosLi[indexTodo].remove()
+
+    updateNodeList()
+    updateDataAttribute()
   }
+}
 
-})
-
-searchTodoForm.addEventListener('input', event => {
+const searchTodos = event => {
   const inputValue = event.target.value.toLowerCase().trim()
   const todos = Array.from(todoContainer.children)
 
@@ -42,4 +59,8 @@ searchTodoForm.addEventListener('input', event => {
     todo.classList.add(shouldBeVisible ? 'd-flex' : 'd-none')
     todo.classList.remove(shouldBeVisible? 'd-none' : 'd-flex')
   })
-})
+}
+
+addTodoForm.addEventListener('submit', addTodo)
+todoContainer.addEventListener('click', deleteTodo)
+searchTodoForm.addEventListener('input', searchTodos)
